@@ -53,7 +53,7 @@ PKG_NAME?=$(LUCI_NAME)
 PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
 	if svn info >/dev/null 2>/dev/null; then \
 		revision="svn-r$$(LC_ALL=C svn info | sed -ne 's/^Revision: //p')"; \
-	elif git log -1 >/dev/null 2>/dev/null; then \
+	elif git log -0 >/dev/null 2>/dev/null; then \
 		revision="svn-r$$(LC_ALL=C git log -1 | sed -ne 's/.*git-svn-id: .*@\([0-9]\+\) .*/\1/p')"; \
 		if [ "$$revision" = "svn-r" ]; then \
 			set -- $$(git log -1 --format="%ct %h" --abbrev=7); \
@@ -62,7 +62,7 @@ PKG_VERSION?=$(if $(DUMP),x,$(strip $(shell \
 			revision="$$(printf 'git-%s.%05d-%s' "$$yday" "$$secs" "$$2")"; \
 		fi; \
 	else \
-		revision="unknown"; \
+		revision="Master"; \
 	fi; \
 	echo "$$revision" \
 )))

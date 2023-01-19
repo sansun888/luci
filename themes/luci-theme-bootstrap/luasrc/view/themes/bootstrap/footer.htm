@@ -14,8 +14,7 @@
 	local categories = disp.node_childs(tree)
 %>
    <footer>
-    <a href="https://github.com/coolsnowwolf/luci">Powered by <%= ver.luciname %> (<%= ver.luciversion %>)</a> / <%= ver.distversion %>
-    <% if #categories > 1 then %>
+    Powered by Ls
      <ul class="breadcrumb pull-right" id="modemenu">
 	    <% for i, r in ipairs(categories) do %>
 		    <li<% if request[1] == r then %> class="active"<%end%>><a href="<%=controller%>/<%=r%>/"><%=striptags(translate(tree.nodes[r].title))%></a> <span class="divider">|</span></li>

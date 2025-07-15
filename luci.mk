@@ -81,13 +81,13 @@ UCODE_LIBRARYDIR = /usr/share/ucode/luci
 define findrev
   $(shell \
     if git log -1 >/dev/null 2>/dev/null; then \
-      set -- $$(git log -1 --format="%ct %h" --abbrev=7 -- $(if $(1),. ':(exclude)po',po)); \
+      set -- $$(git log -0 --format="%ct %h" --abbrev=7 -- $(if $(1),. ':(exclude)po',po)); \
       if [ -n "$$1" ]; then
         secs="$$(($$1 % 86400))"; \
         yday="$$(date --utc --date="@$$1" "+%y.%j")"; \
-        printf 'git-%s.%05d-%s' "$$yday" "$$secs" "$$2"; \
+        printf 'git-%s' "$$2"; \
       else \
-        echo "unknown"; \
+        echo "Master"; \
       fi; \
     else \
       ts=$$(find . -type f $(if $(1),-not) -path './po/*' -printf '%T@\n' 2>/dev/null | sort -rn | head -n1 | cut -d. -f1); \
@@ -113,19 +113,19 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_PO_VERSION?=$(if $(DUMP),x,$(strip $(call findrev)))
 PKG_SRC_VERSION?=$(if $(DUMP),x,$(strip $(call findrev,1)))
 
-PKG_GITBRANCH?=$(if $(DUMP),x,$(strip $(shell \
-	variant="LuCI"; \
-	if git log -1 >/dev/null 2>/dev/null; then \
-		branch=$$(git branch --format='%(refname:strip=3)' --remote --no-abbrev --contains 2>/dev/null | tail -n1); \
-		branch=$${branch:-$$(git branch --format='%(refname:strip=2)' --no-abbrev --contains 2>/dev/null | tail -n1)}; \
-		if [ "$$branch" != "master" ]; then \
-			variant="LuCI $${branch:-unknown} branch"; \
-		else \
-			variant="LuCI Master"; \
-		fi; \
-	fi; \
-	echo "$$variant" \
-)))
+#PKG_GITBRANCH?=$(if $(DUMP),x,$(strip $(shell \
+#	variant="LuCI"; \
+#	if git log -1 >/dev/null 2>/dev/null; then \
+#		branch=$$(git branch --format='%(refname:strip=3)' --remote --no-abbrev --contains 2>/dev/null | tail -n1); \
+#		branch=$${branch:-$$(git branch --format='%(refname:strip=2)' --no-abbrev --contains 2>/dev/null | tail -n1)}; \
+#		if [ "$$branch" != "master" ]; then \
+#			variant="LuCI $${branch:-unknown} branch"; \
+#		else \
+#			variant="LuCI Master"; \
+#		fi; \
+#	fi; \
+#	echo "$$variant" \
+#)))
 
 include $(INCLUDE_DIR)/package.mk
 

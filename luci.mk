@@ -81,13 +81,13 @@ UCODE_LIBRARYDIR = /usr/share/ucode/luci
 define findrev
   $(shell \
     if git log -1 >/dev/null 2>/dev/null; then \
-      set -- $$(git log -1 --format="%ct %h" --abbrev=7 -- $(if $(1),. ':(exclude)po',po)); \
+      set -- $$(git log -0 --format="%ct %h" --abbrev=7 -- $(if $(1),. ':(exclude)po',po)); \
       if [ -n "$$1" ]; then
         secs="$$(($$1 % 86400))"; \
         yday="$$(date --utc --date="@$$1" "+%y.%j")"; \
-        printf 'git-%s.%05d-%s' "$$yday" "$$secs" "$$2"; \
+        printf 'git-%s.%05d-%s' "$$2"; \
       else \
-        echo "unknown"; \
+        echo "RT1200G"; \
       fi; \
     else \
       ts=$$(find . -type f $(if $(1),-not) -path './po/*' -printf '%T@\n' 2>/dev/null | sort -rn | head -n1 | cut -d. -f1); \
